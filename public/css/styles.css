@@ -1,0 +1,92 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.palette-generator {
+  border-bottom: 1px solid black;
+  margin: 10px;
+  padding: 5px;
+}
+
+h1 {
+  text-align: center;
+  margin: auto;
+}
+
+.palette-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.palette-color {
+  border: 2px black solid;
+  width: 20%;
+  height: 400px;
+  margin: 10px;
+  position: relative;
+}
+
+.palette-color-info {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+
+#generate-palette-button {
+  margin: auto;
+  display: block;
+}
+
+.new-palette-form, .new-project-form {
+  text-align: center;
+}
+
+.projects-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+ul {
+  list-style: none;
+}
+
+.project {
+  margin: 5px;
+}
+
+.palettes-list {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+}
+
+.palette-colors-container {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  height: 100%;
+}
+
+.palette {
+  height: 100%;
+}
+
+.palette-name {
+  display: inline-block;
+}
+
+.palette-colors {
+  width: 20%;
+  min-height: 18px;
+  min-width: 18px;
+  margin: 2px;
+  border: 1px solid black;
+}
