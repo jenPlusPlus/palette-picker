@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Palette Picker</title>
+  </head>
+  <body>
+    <div class='palette-generator'>
+      <h1>Palette Picker</h1>
+      <div class='palette-container'>
+        <div class='palette-color' id='color-1'>
+          <button class='lock-button'>Lock</button>
+          <p class='color-hex'>#000000</p>
+        </div>
+        <div class='palette-color' id='color-2'>
+          <button class='lock-button'>Lock</button>
+          <p class='color-hex'>#000000</p>
+        </div>
+        <div class='palette-color' id='color-3'>
+          <button class='lock-button'>Lock</button>
+          <p class='color-hex'>#000000</p>
+        </div>
+        <div class='palette-color' id='color-4'>
+          <button class='lock-button'>Lock</button>
+          <p class='color-hex'>#000000</p>
+        </div>
+        <div class='palette-color' id='color-5'>
+          <button class='lock-button'>Lock</button>
+          <p class='color-hex'>#000000</p>
+        </div>
+      </div>
+      <button id='generate-palette-button'>Generate New Palette!</button>
+      <form>
+        <select id='project-folders'></select>
+        <input type='text' id='palette-name-input' placeholder='Palette name'></input>
+        <button type='submit' id='save-palette-button'>Save Palette</button>
+      </form>
+    </div>
+    <div class='projects-container'>
+      <form>
+        <label for='project-name-input'>Create a new project:</label>
+        <input type='text' id='project-name-input' placeholder='New project name'></input>
+        <button type='submit' id='save-project-button'>Save Project</button>
+      </form>
+      <div class='projects-list-container'>
+        <ul class='projects-list'>
+          <li key=1 class='project'>
+            <h3 class='project-name'>Project Name 1</h3>
+            <ul class='palettes-list'>
+              <li key=101 class='palette'>
+                <p class='palette-name'>Palette Name 1</p>
+                <div class='palette-colors'></div>
+                <div class='palette-colors'></div>
+                <div class='palette-colors'></div>
+                <div class='palette-colors'></div>
+                <div class='palette-colors'></div>
+                <button class='delete-palette-button'>Delete</button>
+              </li>
+              <li key=102 class='palette'>
+                <p class='palette-name'>Palette Name 2</p>
+                <div class='palette-colors'></div>
+                <div class='palette-colors'></div>
+                <div class='palette-colors'></div>
+                <div class='palette-colors'></div>
+                <div class='palette-colors'></div>
+                <button class='delete-palette-button'>Delete</button>
+              </li>
+            </ul>
+          </li>
+          <li key=2 class='project'>
+            <h3 class='project-name'>Project Name 2</h3>
+            <ul class='palettes-list'>
+              <li key=201 class='palette'>
+                <p class='palette-name'>Palette Name 1</p>
+                <div class='palette-colors'></div>
+                <div class='palette-colors'></div>
+                <div class='palette-colors'></div>
+                <div class='palette-colors'></div>
+                <div class='palette-colors'></div>
+                <button class='delete-palette-button'>Delete</button>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
