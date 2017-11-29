@@ -11,6 +11,7 @@ const assignColors = () => {
   for (let i = 1; i < 6; i++) {
     const color = generateRandomColor();
     $(`#color-${i}`).css('background-color', color);
+    $(`#color-hex-${i}`).text(color);
   };
 }
 
