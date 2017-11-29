@@ -13,3 +13,9 @@ const assignColors = () => {
     $(`#color-${i}`).css('background-color', color);
   };
 }
+
+window.onload = () => {
+  assignColors();
+};
+
+$('#generate-palette-button').on('click', assignColors);
