@@ -42,6 +42,25 @@ app.get('/api/v1/projects/:projectID', (request, response) => {
   })
 });
 
+app.get('/api/v1/palettes/:paletteID', (request, response) => {
+  const paletteID = request.params.paletteID;
+  console.log('paletteID: ', paletteID);
+
+  database('palettes').where('id', request.params.paletteID).select()
+  .then(palette => {
+    console.log('palette: ', palette);
+    if (palette.length) {
+      return response.status(200).json(palette);
+    } else {
+      return response.status(404).json({ error: `Cannot find palette with ID ${paletteID}.` })
+    }
+  })
+  .catch(error => {
+    return response.status(500).json({ error })
+  });
+});
+
+// unecessary ??
 app.get('/api/v1/palettes', (request, response) => {
   database('palettes').select()
     .then(palettes => {
@@ -119,13 +138,13 @@ app.delete('/api/v1/palettes/:paletteID', (request, response) => {
   .then(palette => {
     console.log('palette: ', palette);
     if (palette) {
-      response.sendStatus(204)
+      return response.sendStatus(204)
     } else {
-      response.status(422).json({ error: `Cannot find palette with ID ${paletteID}.` })
+      return response.status(422).json({ error: `Cannot find palette with ID ${paletteID}.` })
     }
   })
   .catch(error => {
-    response.status(500).json({ error })
+    return response.status(500).json({ error })
   });
 });
 
