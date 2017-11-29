@@ -44,11 +44,9 @@ app.get('/api/v1/projects/:projectID', (request, response) => {
 
 app.get('/api/v1/palettes/:paletteID', (request, response) => {
   const paletteID = request.params.paletteID;
-  console.log('paletteID: ', paletteID);
 
   database('palettes').where('id', request.params.paletteID).select()
   .then(palette => {
-    console.log('palette: ', palette);
     if (palette.length) {
       return response.status(200).json(palette);
     } else {
@@ -132,11 +130,8 @@ app.post('/api/v1/projects/:projectID/palettes', (request, response) => {
 
 app.delete('/api/v1/palettes/:paletteID', (request, response) => {
   const paletteID = request.params.paletteID;
-  console.log('paletteID: ', paletteID);
-
   database('palettes').where('id', request.params.paletteID).del()
   .then(palette => {
-    console.log('palette: ', palette);
     if (palette) {
       return response.sendStatus(204)
     } else {
