@@ -28,8 +28,8 @@ const lockColor = (event) => {
   $(event.target).parents('.palette-color').toggleClass('locked');
 }
 
-const addErrorClass = (projectID) => {
-  $(`#no-palette-${projectID}`).addClass('error-no-palettes');
+const toggleErrorClass = (projectID) => {
+  $(`#no-palette-${projectID}`).toggleClass('error-no-palettes');
 }
 
 const addPaletteToPage = (palette, projectID) => {
@@ -57,7 +57,7 @@ const getAllPalettesForProject = (project) => {
   .then(palettes => palettes.json())
   .then(parsedPalettes => {
     if(parsedPalettes.error) {
-      addErrorClass(project.id);
+      toggleErrorClass(project.id);
       console.log(project.name + ' error: ' + parsedPalettes.error);
     } else {
       parsedPalettes.forEach(palette => {
@@ -119,7 +119,6 @@ const saveProject = (event) => {
 
 const savePalette = (event) => {
   event.preventDefault();
-  console.log('saving palette!');
   const paletteName = $('#palette-name-input').val();
   const color1 = $('#color-hex-1').text();
   const color2 = $('#color-hex-2').text();
@@ -127,7 +126,6 @@ const savePalette = (event) => {
   const color4 = $('#color-hex-4').text();
   const color5 = $('#color-hex-5').text();
   const projectID = $('#project-folders option:selected').val();
-  console.log('paletteName: ', paletteName);
 
   fetch(`/api/v1/projects/${projectID}/palettes`, {
     method: 'POST',
@@ -143,8 +141,13 @@ const savePalette = (event) => {
       color5: color5 })
   })
   .then(response => response.json())
-  .then(addedPalette => addPaletteToPage(addedPalette))
+  .then(addedPalette => {
+    toggleErrorClass(projectID);
+    addPaletteToPage(addedPalette, projectID);
+  })
   .catch(error => console.log(error))
+
+  $('#palette-name-input').val('');
 }
 
 window.onload = () => {
