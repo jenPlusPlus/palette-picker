@@ -28,8 +28,11 @@ const lockColor = (event) => {
   $(event.target).parents('.palette-color').toggleClass('locked');
 }
 
+const addErrorClass = (projectID) => {
+  $(`#no-palette-${projectID}`).addClass('error-no-palettes');
+}
+
 const addPalettesToPage = (palette, projectID) => {
-  console.log('palette: ', palette);
   const paletteHTML = `
     <li key='palette-${palette.id}' class='palette'>
       <p class='palette-name'>${palette.name}</p>
@@ -43,6 +46,9 @@ const addPalettesToPage = (palette, projectID) => {
       <button class='delete-palette-button'>Delete</button>
     </li>`;
 
+    if(!$(`#no-palette-${projectID}`).hasClass('error-no-palettes')) {
+      $(`#no-palette-${projectID}`).remove();
+    }
     $(`#project-${projectID}-palettes`).append(paletteHTML);
 }
 
@@ -51,7 +57,8 @@ const getAllPalettesForProject = (project) => {
   .then(palettes => palettes.json())
   .then(parsedPalettes => {
     if(parsedPalettes.error) {
-      console.log(project.name + ' : ' + parsedPalettes.error);
+      addErrorClass(project.id);
+      console.log(project.name + ' error: ' + parsedPalettes.error);
     } else {
       parsedPalettes.forEach(palette => {
         addPalettesToPage(palette, project.id);
@@ -61,14 +68,16 @@ const getAllPalettesForProject = (project) => {
   .catch(error => console.log(error))
 }
 
-const addProjectsToPage = (project) => {
-  console.log('project: ', project);
+const addProjectToPage = (project) => {
   const projectHTML =
   `<li key='project-${project.id}' class='project'>
     <h3 class='project-name'>${project.name}</h3>
-    <ul class='palettes-list' id='project-${project.id}-palettes'></ul>
+    <ul class='palettes-list' id='project-${project.id}-palettes'>
+      <li key='no-palette-${project.id}' id='no-palette-${project.id}' class='no-palette'>You haven't added any palettes to this project yet.</li>
+    </ul>
   </li>`;
   $('.projects-list').append(projectHTML);
+  $('#project-folders').append(new Option(`${project.name}`, `${project.name}`, false, true));
 }
 
 const getAllProjects = () => {
@@ -76,11 +85,36 @@ const getAllProjects = () => {
   .then(projects => projects.json())
   .then(parsedProjects => {
     parsedProjects.forEach(project => {
-      addProjectsToPage(project);
+      addProjectToPage(project);
       getAllPalettesForProject(project);
     })
   })
   .catch(error => console.log(error))
+}
+
+const saveProject = (event) => {
+  event.preventDefault();
+
+  const projectName = $('#project-name-input').val();
+
+  fetch('/api/v1/projects', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ name: projectName })
+  })
+  .then(response => {
+    if (response.status === 201) {
+      return response.json()
+    }
+  })
+  .then(addedProject => {
+    addProjectToPage(addedProject);
+  })
+  .catch(error => console.log(error))
+
+  $('#project-name-input').val('');
 }
 
 window.onload = () => {
@@ -90,3 +124,4 @@ window.onload = () => {
 
 $('#generate-palette-button').on('click', assignColors);
 $('.lock-button').on('click', lockColor);
+$('#save-project-button').on('click', saveProject);
