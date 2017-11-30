@@ -31,7 +31,11 @@ const lockColor = (event) => {
 const getAllProjects = () => {
   fetch('/api/v1/projects')
   .then(projects => projects.json())
-  .then(parsedProjects => console.log('parsedProjects: ', parsedProjects))
+  .then(parsedProjects => {
+    parsedProjects.forEach(project => {
+      console.log('project: ', project);
+    })
+  })
   .catch(error => console.log(error))
 }
 
