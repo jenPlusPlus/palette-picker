@@ -43,7 +43,7 @@ const movePaletteToGenerator = (event) => {
 const addPaletteToPage = (palette, projectID) => {
   const paletteHTML = `
     <li key='palette-${palette.id}' id='palette-${palette.id}' class='palette' data-id=${palette.id}>
-      <p class='palette-name saved-palette'>${palette.name}</p>
+      <p class='palette-name saved-palette-${palette.id}'>${palette.name}</p>
       <div class='palette-colors-container'>
         <div class='palette-colors saved-palette-${palette.id}' id='color-${palette.color1}' style='background-color: ${palette.color1}'></div>
         <div class='palette-colors saved-palette-${palette.id}' id='color-${palette.color2}' style='background-color: ${palette.color2}'></div>
@@ -163,6 +163,8 @@ const saveProject = (event) => {
     addProjectToPage(addedProject);
   })
   .catch(error => console.log(error))
+
+  $('#save-project-button').attr("disabled", true);
 }
 
 const savePalette = (event) => {
@@ -190,12 +192,14 @@ const savePalette = (event) => {
   })
   .then(response => response.json())
   .then(addedPalette => {
+    console.log('toggling class');
     toggleErrorClass(projectID);
     addPaletteToPage(addedPalette, projectID);
   })
   .catch(error => console.log(error))
 
   $('#palette-name-input').val('');
+  $('#save-palette-button').attr("disabled", true);
 }
 
 const deletePaletteDB = (event) => {
@@ -222,11 +226,30 @@ const deletePalette = (event) => {
   deletePaletteFromPage(event);
 }
 
+const enableSavePaletteButton = () => {
+  if($('#palette-name-input').val() != ''){
+    $('#save-palette-button').attr("disabled", false);
+  }
+  else {
+    $('#save-palette-button').attr("disabled", true);
+  }
+}
+
+const enableSaveProjectButton = () => {
+  if($('#project-name-input').val() != ''){
+    $('#save-project-button').attr("disabled", false);
+  } else {
+    $('#save-project-button').attr("disabled", true);
+  }
+}
+
 window.onload = () => {
   assignColors();
   getAllProjects();
 };
 
+$('#palette-name-input').on('keyup', enableSavePaletteButton);
+$('#project-name-input').on('keyup', enableSaveProjectButton);
 $('#generate-palette-button').on('click', assignColors);
 $('.lock-button').on('click', lockColor);
 $('#save-project-button').on('click', checkIfProjectExists);
