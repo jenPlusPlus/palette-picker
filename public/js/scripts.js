@@ -43,7 +43,7 @@ const movePaletteToGenerator = (event) => {
 const addPaletteToPage = (palette, projectID) => {
   const paletteHTML = `
     <li key='palette-${palette.id}' id='palette-${palette.id}' class='palette' data-id=${palette.id}>
-      <p class='palette-name saved-palette'>${palette.name}</p>
+      <p class='palette-name saved-palette-${palette.id}'>${palette.name}</p>
       <div class='palette-colors-container'>
         <div class='palette-colors saved-palette-${palette.id}' id='color-${palette.color1}' style='background-color: ${palette.color1}'></div>
         <div class='palette-colors saved-palette-${palette.id}' id='color-${palette.color2}' style='background-color: ${palette.color2}'></div>
