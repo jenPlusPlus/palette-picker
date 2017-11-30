@@ -28,11 +28,11 @@ const lockColor = (event) => {
   $(event.target).parents('.palette-color').toggleClass('locked');
 }
 
-const addErrorClass = (projectID) => {
-  $(`#no-palette-${projectID}`).addClass('error-no-palettes');
+const toggleErrorClass = (projectID) => {
+  $(`#no-palette-${projectID}`).toggleClass('error-no-palettes');
 }
 
-const addPalettesToPage = (palette, projectID) => {
+const addPaletteToPage = (palette, projectID) => {
   const paletteHTML = `
     <li key='palette-${palette.id}' class='palette'>
       <p class='palette-name'>${palette.name}</p>
@@ -57,11 +57,11 @@ const getAllPalettesForProject = (project) => {
   .then(palettes => palettes.json())
   .then(parsedPalettes => {
     if(parsedPalettes.error) {
-      addErrorClass(project.id);
+      toggleErrorClass(project.id);
       console.log(project.name + ' error: ' + parsedPalettes.error);
     } else {
       parsedPalettes.forEach(palette => {
-        addPalettesToPage(palette, project.id);
+        addPaletteToPage(palette, project.id);
       });
     }
   })
@@ -77,7 +77,7 @@ const addProjectToPage = (project) => {
     </ul>
   </li>`;
   $('.projects-list').append(projectHTML);
-  $('#project-folders').append(new Option(`${project.name}`, `${project.name}`, false, true));
+  $('#project-folders').append(new Option(`${project.name}`, project.id, false, true));
 }
 
 const getAllProjects = () => {
@@ -117,6 +117,39 @@ const saveProject = (event) => {
   $('#project-name-input').val('');
 }
 
+const savePalette = (event) => {
+  event.preventDefault();
+  const paletteName = $('#palette-name-input').val();
+  const color1 = $('#color-hex-1').text();
+  const color2 = $('#color-hex-2').text();
+  const color3 = $('#color-hex-3').text();
+  const color4 = $('#color-hex-4').text();
+  const color5 = $('#color-hex-5').text();
+  const projectID = $('#project-folders option:selected').val();
+
+  fetch(`/api/v1/projects/${projectID}/palettes`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: paletteName,
+      color1: color1,
+      color2: color2,
+      color3: color3,
+      color4: color4,
+      color5: color5 })
+  })
+  .then(response => response.json())
+  .then(addedPalette => {
+    toggleErrorClass(projectID);
+    addPaletteToPage(addedPalette, projectID);
+  })
+  .catch(error => console.log(error))
+
+  $('#palette-name-input').val('');
+}
+
 window.onload = () => {
   assignColors();
   getAllProjects();
@@ -125,3 +158,4 @@ window.onload = () => {
 $('#generate-palette-button').on('click', assignColors);
 $('.lock-button').on('click', lockColor);
 $('#save-project-button').on('click', saveProject);
+$('#save-palette-button').on('click', savePalette);

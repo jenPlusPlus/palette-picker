@@ -119,9 +119,17 @@ app.post('/api/v1/projects/:projectID/palettes', (request, response) => {
 
   palette = Object.assign({}, palette, {project_id: projectID});
 
-  database('palettes').insert(palette, 'id')
+  database('palettes').insert(palette, ['id', 'name', 'color1', 'color2', 'color3', 'color4', 'color5'])
   .then(palette => {
-    return response.status(201).json( { id: palette[0] })
+    return response.status(201).json( {
+      id: palette[0].id,
+      name: palette[0].name,
+      color1: palette[0].color1,
+      color2: palette[0].color2,
+      color3: palette[0].color3,
+      color4: palette[0].color4,
+      color5: palette[0].color5
+     })
   })
   .catch(error => {
     return response.status(500).json( { error });
