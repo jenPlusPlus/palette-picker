@@ -50,7 +50,7 @@ const addPaletteToPage = (palette, projectID) => {
       $(`#no-palette-${projectID}`).remove();
     }
     $(`#project-${projectID}-palettes`).append(paletteHTML);
-    $('.delete-palette-button').on('click', deletePalette);
+    $(`#delete-palette-${palette.id}`).on('click', deletePalette);
 }
 
 const getAllPalettesForProject = (project) => {
@@ -73,8 +73,8 @@ const addProjectToPage = (project) => {
   const projectHTML =
   `<li key='project-${project.id}' class='project'>
     <h3 class='project-name'>${project.name}</h3>
-    <ul class='palettes-list' id='project-${project.id}-palettes'>
-      <li key='no-palette-${project.id}' id='no-palette-${project.id}' class='no-palette'>You haven't added any palettes to this project yet.</li>
+    <ul class='palettes-list' id='project-${project.id}-palettes' data-id=${project.id}>
+      <li key='no-palette-${project.id}' id='no-palette-${project.id}' class='no-palette'>No palettes</li>
     </ul>
   </li>`;
   $('.projects-list').append(projectHTML);
@@ -153,8 +153,11 @@ const savePalette = (event) => {
 
 const deletePalette = (event) => {
   event.preventDefault();
-  console.log('deleting palette');
+  const projectID = $(event.target).parents('.palettes-list').data('id');
   $(event.target).parents('.palette').remove();
+  if($(`#project-${projectID}-palettes`).children('.palette').length === 0) {
+    $(`#project-${projectID}-palettes`).append(`<li key='no-palette-${projectID}' id='no-palette-${projectID}' class='no-palette'>No palettes</li>`)
+  }
 }
 
 window.onload = () => {
