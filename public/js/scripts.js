@@ -29,7 +29,7 @@ const lockColor = (event) => {
 }
 
 const toggleErrorClass = (projectID) => {
-  $(`#no-palette-${projectID}`).toggleClass('error-no-palettes');
+  $(`#no-palette-${projectID}`).toggleClass('no-palettes');
 }
 
 const movePaletteToGenerator = (event) => {
@@ -192,7 +192,6 @@ const savePalette = (event) => {
   })
   .then(response => response.json())
   .then(addedPalette => {
-    console.log('toggling class');
     toggleErrorClass(projectID);
     addPaletteToPage(addedPalette, projectID);
   })
