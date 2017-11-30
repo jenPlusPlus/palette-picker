@@ -28,6 +28,11 @@ const lockColor = (event) => {
   $(event.target).parents('.palette-color').toggleClass('locked');
 }
 
+const notifyNoPalettes = (projectID) => {
+  const noPaletteHTML = `<li key=0 class='no-palette'>You haven't added any palettes to this project yet.</li>`;
+  $(`#project-${projectID}-palettes`).append(noPaletteHTML);
+}
+
 const addPalettesToPage = (palette, projectID) => {
   const paletteHTML = `
     <li key='palette-${palette.id}' class='palette'>
@@ -50,6 +55,7 @@ const getAllPalettesForProject = (project) => {
   .then(palettes => palettes.json())
   .then(parsedPalettes => {
     if(parsedPalettes.error) {
+      notifyNoPalettes(project.id);
       console.log(project.name + ' error: ' + parsedPalettes.error);
     } else {
       parsedPalettes.forEach(palette => {
