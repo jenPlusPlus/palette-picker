@@ -28,12 +28,31 @@ const lockColor = (event) => {
   $(event.target).parents('.palette-color').toggleClass('locked');
 }
 
+const addProjectsToPage = (project) => {
+  console.log('project: ', project);
+  const projectHTML = `<li key='project-${project.id}' class='project'>
+    <h3 class='project-name'>${project.name}</h3>
+    <ul class='palettes-list'>
+      <li key=201 class='palette'>
+        <p class='palette-name'>Palette Name 1</p>
+        <div class='palette-colors-container'>
+          <div class='palette-colors'></div>
+          <div class='palette-colors'></div>
+          <div class='palette-colors'></div>
+          <div class='palette-colors'></div>
+          <div class='palette-colors'></div>
+        </div>
+        <button class='delete-palette-button'>Delete</button>
+      </li>`;
+  $('.projects-list').append(projectHTML);
+}
+
 const getAllProjects = () => {
   fetch('/api/v1/projects')
   .then(projects => projects.json())
   .then(parsedProjects => {
     parsedProjects.forEach(project => {
-      console.log('project: ', project);
+      addProjectsToPage(project);
     })
   })
   .catch(error => console.log(error))
