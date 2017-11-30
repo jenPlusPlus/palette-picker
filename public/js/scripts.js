@@ -61,7 +61,7 @@ const getAllPalettesForProject = (project) => {
   .catch(error => console.log(error))
 }
 
-const addProjectsToPage = (project) => {
+const addProjectToPage = (project) => {
   console.log('project: ', project);
   const projectHTML =
   `<li key='project-${project.id}' class='project'>
@@ -76,11 +76,37 @@ const getAllProjects = () => {
   .then(projects => projects.json())
   .then(parsedProjects => {
     parsedProjects.forEach(project => {
-      addProjectsToPage(project);
+      addProjectToPage(project);
       getAllPalettesForProject(project);
     })
   })
   .catch(error => console.log(error))
+}
+
+const saveProject = (event) => {
+  event.preventDefault();
+  console.log('save project!!!');
+  const projectName = $('#project-name-input').val();
+  console.log('projectName: ', projectName);
+  fetch('/api/v1/projects', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ name: projectName })
+  })
+  .then(response => {
+    if (response.status === 201) {
+      return response.json()
+    }
+  })
+  .then(addedProject => {
+    console.log('addedProject: ', addedProject);
+    addProjectToPage(addedProject);
+  })
+  .catch(error => console.log(error))
+
+  $('#project-name-input').val('');
 }
 
 window.onload = () => {
@@ -90,3 +116,4 @@ window.onload = () => {
 
 $('#generate-palette-button').on('click', assignColors);
 $('.lock-button').on('click', lockColor);
+$('#save-project-button').on('click', saveProject);
