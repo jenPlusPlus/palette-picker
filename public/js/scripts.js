@@ -32,16 +32,24 @@ const toggleErrorClass = (projectID) => {
   $(`#no-palette-${projectID}`).toggleClass('error-no-palettes');
 }
 
+const movePaletteToGenerator = (event) => {
+  event.preventDefault();
+  for (let i = 1; i < 6; i++) {
+    $(`#color-${i}`).css('background-color', event.data[i-1]);
+    $(`#color-hex-${i}`).text(event.data[i-1]);
+  }
+}
+
 const addPaletteToPage = (palette, projectID) => {
   const paletteHTML = `
     <li key='palette-${palette.id}' id='palette-${palette.id}' class='palette' data-id=${palette.id}>
-      <p class='palette-name'>${palette.name}</p>
+      <p class='palette-name saved-palette'>${palette.name}</p>
       <div class='palette-colors-container'>
-        <div class='palette-colors' id='color-${palette.color1}' style='background-color: ${palette.color1}'></div>
-        <div class='palette-colors' id='color-${palette.color2}' style='background-color: ${palette.color2}'></div>
-        <div class='palette-colors' id='color-${palette.color3}' style='background-color: ${palette.color3}'></div>
-        <div class='palette-colors' id='color-${palette.color4}' style='background-color: ${palette.color4}'></div>
-        <div class='palette-colors' id='color-${palette.color5}' style='background-color: ${palette.color5}'></div>
+        <div class='palette-colors saved-palette-${palette.id}' id='color-${palette.color1}' style='background-color: ${palette.color1}'></div>
+        <div class='palette-colors saved-palette-${palette.id}' id='color-${palette.color2}' style='background-color: ${palette.color2}'></div>
+        <div class='palette-colors saved-palette-${palette.id}' id='color-${palette.color3}' style='background-color: ${palette.color3}'></div>
+        <div class='palette-colors saved-palette-${palette.id}' id='color-${palette.color4}' style='background-color: ${palette.color4}'></div>
+        <div class='palette-colors saved-palette-${palette.id}' id='color-${palette.color5}' style='background-color: ${palette.color5}'></div>
       </div>
       <button class='delete-palette-button' id='delete-palette-${palette.id}'>Delete</button>
     </li>`;
@@ -51,6 +59,13 @@ const addPaletteToPage = (palette, projectID) => {
     }
     $(`#project-${projectID}-palettes`).append(paletteHTML);
     $(`#delete-palette-${palette.id}`).on('click', deletePalette);
+    $(`.saved-palette-${palette.id}`).on('click', [
+      palette.color1,
+      palette.color2,
+      palette.color3,
+      palette.color4,
+      palette.color5
+    ], movePaletteToGenerator);
 }
 
 const getAllPalettesForProject = (project) => {
