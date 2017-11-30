@@ -163,6 +163,8 @@ const saveProject = (event) => {
     addProjectToPage(addedProject);
   })
   .catch(error => console.log(error))
+
+  $('#save-project-button').attr("disabled", true);
 }
 
 const savePalette = (event) => {
@@ -196,6 +198,7 @@ const savePalette = (event) => {
   .catch(error => console.log(error))
 
   $('#palette-name-input').val('');
+  $('#save-palette-button').attr("disabled", true);
 }
 
 const deletePaletteDB = (event) => {
@@ -222,11 +225,30 @@ const deletePalette = (event) => {
   deletePaletteFromPage(event);
 }
 
+const enableSavePaletteButton = () => {
+  if($('#palette-name-input').val() != ''){
+    $('#save-palette-button').attr("disabled", false);
+  }
+  else {
+    $('#save-palette-button').attr("disabled", true);
+  }
+}
+
+const enableSaveProjectButton = () => {
+  if($('#project-name-input').val() != ''){
+    $('#save-project-button').attr("disabled", false);
+  } else {
+    $('#save-project-button').attr("disabled", true);
+  }
+}
+
 window.onload = () => {
   assignColors();
   getAllProjects();
 };
 
+$('#palette-name-input').on('keyup', enableSavePaletteButton);
+$('#project-name-input').on('keyup', enableSaveProjectButton);
 $('#generate-palette-button').on('click', assignColors);
 $('.lock-button').on('click', lockColor);
 $('#save-project-button').on('click', checkIfProjectExists);
