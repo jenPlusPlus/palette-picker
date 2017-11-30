@@ -28,8 +28,16 @@ const lockColor = (event) => {
   $(event.target).parents('.palette-color').toggleClass('locked');
 }
 
+const getAllProjects = () => {
+  fetch('/api/v1/projects')
+  .then(projects => projects.json())
+  .then(parsedProjects => console.log('parsedProjects: ', parsedProjects))
+  .catch(error => console.log(error))
+}
+
 window.onload = () => {
   assignColors();
+  getAllProjects();
 };
 
 $('#generate-palette-button').on('click', assignColors);
