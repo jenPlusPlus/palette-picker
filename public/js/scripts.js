@@ -37,11 +37,11 @@ const addPalettesToPage = (palette, projectID) => {
     <li key='palette-${palette.id}' class='palette'>
       <p class='palette-name'>${palette.name}</p>
       <div class='palette-colors-container'>
-        <div class='palette-colors' id='color-${palette.color1}'></div>
-        <div class='palette-colors' id='color-${palette.color2}'></div>
-        <div class='palette-colors' id='color-${palette.color3}'></div>
-        <div class='palette-colors' id='color-${palette.color4}'></div>
-        <div class='palette-colors' id='color-${palette.color5}'></div>
+        <div class='palette-colors' id='color-${palette.color1}' style='background-color: ${palette.color1}'></div>
+        <div class='palette-colors' id='color-${palette.color2}' style='background-color: ${palette.color2}'></div>
+        <div class='palette-colors' id='color-${palette.color3}' style='background-color: ${palette.color3}'></div>
+        <div class='palette-colors' id='color-${palette.color4}' style='background-color: ${palette.color4}'></div>
+        <div class='palette-colors' id='color-${palette.color5}' style='background-color: ${palette.color5}'></div>
       </div>
       <button class='delete-palette-button'>Delete</button>
     </li>`;
