@@ -34,7 +34,7 @@ const toggleErrorClass = (projectID) => {
 
 const addPaletteToPage = (palette, projectID) => {
   const paletteHTML = `
-    <li key='palette-${palette.id}' class='palette'>
+    <li key='palette-${palette.id}' id='palette-${palette.id}' class='palette'>
       <p class='palette-name'>${palette.name}</p>
       <div class='palette-colors-container'>
         <div class='palette-colors' id='color-${palette.color1}' style='background-color: ${palette.color1}'></div>
@@ -43,13 +43,14 @@ const addPaletteToPage = (palette, projectID) => {
         <div class='palette-colors' id='color-${palette.color4}' style='background-color: ${palette.color4}'></div>
         <div class='palette-colors' id='color-${palette.color5}' style='background-color: ${palette.color5}'></div>
       </div>
-      <button class='delete-palette-button'>Delete</button>
+      <button class='delete-palette-button' id='delete-palette-${palette.id}'>Delete</button>
     </li>`;
 
     if(!$(`#no-palette-${projectID}`).hasClass('error-no-palettes')) {
       $(`#no-palette-${projectID}`).remove();
     }
     $(`#project-${projectID}-palettes`).append(paletteHTML);
+    $('.delete-palette-button').on('click', deletePalette);
 }
 
 const getAllPalettesForProject = (project) => {
@@ -148,6 +149,12 @@ const savePalette = (event) => {
   .catch(error => console.log(error))
 
   $('#palette-name-input').val('');
+}
+
+const deletePalette = (event) => {
+  event.preventDefault();
+  console.log('deleting palette');
+  $(event.target).parents('.palette').remove();
 }
 
 window.onload = () => {
