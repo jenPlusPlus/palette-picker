@@ -28,9 +28,8 @@ const lockColor = (event) => {
   $(event.target).parents('.palette-color').toggleClass('locked');
 }
 
-const notifyNoPalettes = (projectID) => {
-  const noPaletteHTML = `<li key=0 class='no-palette'>You haven't added any palettes to this project yet.</li>`;
-  $(`#project-${projectID}-palettes`).append(noPaletteHTML);
+const addErrorClass = (projectID) => {
+  $(`#no-palette-${projectID}`).addClass('error-no-palettes');
 }
 
 const addPalettesToPage = (palette, projectID) => {
@@ -47,6 +46,9 @@ const addPalettesToPage = (palette, projectID) => {
       <button class='delete-palette-button'>Delete</button>
     </li>`;
 
+    if(!$(`#no-palette-${projectID}`).hasClass('error-no-palettes')) {
+      $(`#no-palette-${projectID}`).remove();
+    }
     $(`#project-${projectID}-palettes`).append(paletteHTML);
 }
 
@@ -55,7 +57,7 @@ const getAllPalettesForProject = (project) => {
   .then(palettes => palettes.json())
   .then(parsedPalettes => {
     if(parsedPalettes.error) {
-      notifyNoPalettes(project.id);
+      addErrorClass(project.id);
       console.log(project.name + ' error: ' + parsedPalettes.error);
     } else {
       parsedPalettes.forEach(palette => {
@@ -70,9 +72,12 @@ const addProjectToPage = (project) => {
   const projectHTML =
   `<li key='project-${project.id}' class='project'>
     <h3 class='project-name'>${project.name}</h3>
-    <ul class='palettes-list' id='project-${project.id}-palettes'></ul>
+    <ul class='palettes-list' id='project-${project.id}-palettes'>
+      <li key='no-palette-${project.id}' id='no-palette-${project.id}' class='no-palette'>You haven't added any palettes to this project yet.</li>
+    </ul>
   </li>`;
   $('.projects-list').append(projectHTML);
+  $('#project-folders').append(new Option(`${project.name}`, `${project.name}`, false, true));
 }
 
 const getAllProjects = () => {
