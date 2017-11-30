@@ -93,6 +93,40 @@ const getAllProjects = () => {
   .catch(error => console.log(error))
 }
 
+const alertDuplicate = (projectName) => {
+  const duplicateMessage = `<p id='duplicate-message' class='duplicate'>Project named ${projectName} already exists.</p>
+  <button id='delete-duplicate-message-button' class='duplicate'>X</button>`
+
+  $('.palette-generator').append(duplicateMessage);
+  $('#delete-duplicate-message-button').on('click', () => $('.duplicate').remove());
+}
+
+const checkIfProjectExists = (event) => {
+  event.preventDefault();
+
+  const projectName = $('#project-name-input').val();
+
+  fetch('/api/v1/projects')
+  .then(projects => projects.json())
+  .then(parsedProjects => {
+    const existingProject = parsedProjects.find(project => {
+      return project.name === projectName;
+    })
+    return existingProject;
+  })
+  .then(foundProject => {
+    if(foundProject) {
+      alertDuplicate(projectName);
+      $('#project-name-input').val('');
+    } else {
+      saveProject(event);
+      $('#project-name-input').val('');
+    }
+  })
+  .catch(error => console.log(error))
+
+}
+
 const saveProject = (event) => {
   event.preventDefault();
 
@@ -114,8 +148,6 @@ const saveProject = (event) => {
     addProjectToPage(addedProject);
   })
   .catch(error => console.log(error))
-
-  $('#project-name-input').val('');
 }
 
 const savePalette = (event) => {
@@ -182,5 +214,5 @@ window.onload = () => {
 
 $('#generate-palette-button').on('click', assignColors);
 $('.lock-button').on('click', lockColor);
-$('#save-project-button').on('click', saveProject);
+$('#save-project-button').on('click', checkIfProjectExists);
 $('#save-palette-button').on('click', savePalette);
