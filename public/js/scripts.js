@@ -29,7 +29,6 @@ const lockColor = (event) => {
 }
 
 const addPalettesToPage = (palette, projectID) => {
-  console.log('palette: ', palette);
   const paletteHTML = `
     <li key='palette-${palette.id}' class='palette'>
       <p class='palette-name'>${palette.name}</p>
@@ -51,7 +50,7 @@ const getAllPalettesForProject = (project) => {
   .then(palettes => palettes.json())
   .then(parsedPalettes => {
     if(parsedPalettes.error) {
-      console.log(project.name + ' : ' + parsedPalettes.error);
+      console.log(project.name + ' error: ' + parsedPalettes.error);
     } else {
       parsedPalettes.forEach(palette => {
         addPalettesToPage(palette, project.id);
@@ -62,7 +61,6 @@ const getAllPalettesForProject = (project) => {
 }
 
 const addProjectToPage = (project) => {
-  console.log('project: ', project);
   const projectHTML =
   `<li key='project-${project.id}' class='project'>
     <h3 class='project-name'>${project.name}</h3>
@@ -85,9 +83,9 @@ const getAllProjects = () => {
 
 const saveProject = (event) => {
   event.preventDefault();
-  console.log('save project!!!');
+
   const projectName = $('#project-name-input').val();
-  console.log('projectName: ', projectName);
+
   fetch('/api/v1/projects', {
     method: 'POST',
     headers: {
@@ -101,7 +99,6 @@ const saveProject = (event) => {
     }
   })
   .then(addedProject => {
-    console.log('addedProject: ', addedProject);
     addProjectToPage(addedProject);
   })
   .catch(error => console.log(error))
