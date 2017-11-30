@@ -192,6 +192,7 @@ const savePalette = (event) => {
   })
   .then(response => response.json())
   .then(addedPalette => {
+    console.log('toggling class');
     toggleErrorClass(projectID);
     addPaletteToPage(addedPalette, projectID);
   })
