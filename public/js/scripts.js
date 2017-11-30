@@ -34,7 +34,7 @@ const toggleErrorClass = (projectID) => {
 
 const addPaletteToPage = (palette, projectID) => {
   const paletteHTML = `
-    <li key='palette-${palette.id}' class='palette'>
+    <li key='palette-${palette.id}' id='palette-${palette.id}' class='palette' data-id=${palette.id}>
       <p class='palette-name'>${palette.name}</p>
       <div class='palette-colors-container'>
         <div class='palette-colors' id='color-${palette.color1}' style='background-color: ${palette.color1}'></div>
@@ -43,13 +43,14 @@ const addPaletteToPage = (palette, projectID) => {
         <div class='palette-colors' id='color-${palette.color4}' style='background-color: ${palette.color4}'></div>
         <div class='palette-colors' id='color-${palette.color5}' style='background-color: ${palette.color5}'></div>
       </div>
-      <button class='delete-palette-button'>Delete</button>
+      <button class='delete-palette-button' id='delete-palette-${palette.id}'>Delete</button>
     </li>`;
 
     if(!$(`#no-palette-${projectID}`).hasClass('error-no-palettes')) {
       $(`#no-palette-${projectID}`).remove();
     }
     $(`#project-${projectID}-palettes`).append(paletteHTML);
+    $(`#delete-palette-${palette.id}`).on('click', deletePalette);
 }
 
 const getAllPalettesForProject = (project) => {
@@ -72,8 +73,8 @@ const addProjectToPage = (project) => {
   const projectHTML =
   `<li key='project-${project.id}' class='project'>
     <h3 class='project-name'>${project.name}</h3>
-    <ul class='palettes-list' id='project-${project.id}-palettes'>
-      <li key='no-palette-${project.id}' id='no-palette-${project.id}' class='no-palette'>You haven't added any palettes to this project yet.</li>
+    <ul class='palettes-list' id='project-${project.id}-palettes' data-id=${project.id}>
+      <li key='no-palette-${project.id}' id='no-palette-${project.id}' class='no-palette'>No palettes</li>
     </ul>
   </li>`;
   $('.projects-list').append(projectHTML);
@@ -148,6 +149,30 @@ const savePalette = (event) => {
   .catch(error => console.log(error))
 
   $('#palette-name-input').val('');
+}
+
+const deletePaletteDB = (event) => {
+  event.preventDefault();
+  const paletteID = $(event.target).parents('.palette').data('id');
+
+  fetch(`/api/v1/palettes/${paletteID}`, {
+    method: 'DELETE'
+  })
+  .catch(error => console.log(error))
+}
+
+const deletePaletteFromPage = (event) => {
+  event.preventDefault();
+  const projectID = $(event.target).parents('.palettes-list').data('id');
+  $(event.target).parents('.palette').remove();
+  if($(`#project-${projectID}-palettes`).children('.palette').length === 0) {
+    $(`#project-${projectID}-palettes`).append(`<li key='no-palette-${projectID}' id='no-palette-${projectID}' class='no-palette'>No palettes</li>`)
+  }
+}
+
+const deletePalette = (event) => {
+  deletePaletteDB(event);
+  deletePaletteFromPage(event);
 }
 
 window.onload = () => {
