@@ -28,6 +28,21 @@ const lockColor = (event) => {
   $(event.target).parents('.palette-color').toggleClass('locked');
 }
 
+const getAllPalettesForProject = (project) => {
+  fetch(`/api/v1/projects/${project.id}/palettes`)
+  .then(palettes => palettes.json())
+  .then(parsedPalettes => {
+    if(parsedPalettes.error) {
+      console.log(project.name + ' : ' + parsedPalettes.error);
+    } else {
+      parsedPalettes.forEach(palette => {
+        console.log('palette: ', palette);
+      })
+    }
+  })
+  .catch(error => console.log(error))
+}
+
 const addProjectsToPage = (project) => {
   console.log('project: ', project);
   const projectHTML = `<li key='project-${project.id}' class='project'>
@@ -53,6 +68,7 @@ const getAllProjects = () => {
   .then(parsedProjects => {
     parsedProjects.forEach(project => {
       addProjectsToPage(project);
+      getAllPalettesForProject(project);
     })
   })
   .catch(error => console.log(error))
