@@ -34,7 +34,7 @@ const toggleErrorClass = (projectID) => {
 
 const addPaletteToPage = (palette, projectID) => {
   const paletteHTML = `
-    <li key='palette-${palette.id}' id='palette-${palette.id}' class='palette'>
+    <li key='palette-${palette.id}' id='palette-${palette.id}' class='palette' data-id=${palette.id}>
       <p class='palette-name'>${palette.name}</p>
       <div class='palette-colors-container'>
         <div class='palette-colors' id='color-${palette.color1}' style='background-color: ${palette.color1}'></div>
@@ -151,13 +151,28 @@ const savePalette = (event) => {
   $('#palette-name-input').val('');
 }
 
-const deletePalette = (event) => {
+const deletePaletteDB = (event) => {
+  event.preventDefault();
+  const paletteID = $(event.target).parents('.palette').data('id');
+
+  fetch(`/api/v1/palettes/${paletteID}`, {
+    method: 'DELETE'
+  })
+  .catch(error => console.log(error))
+}
+
+const deletePaletteFromPage = (event) => {
   event.preventDefault();
   const projectID = $(event.target).parents('.palettes-list').data('id');
   $(event.target).parents('.palette').remove();
   if($(`#project-${projectID}-palettes`).children('.palette').length === 0) {
     $(`#project-${projectID}-palettes`).append(`<li key='no-palette-${projectID}' id='no-palette-${projectID}' class='no-palette'>No palettes</li>`)
   }
+}
+
+const deletePalette = (event) => {
+  deletePaletteDB(event);
+  deletePaletteFromPage(event);
 }
 
 window.onload = () => {
