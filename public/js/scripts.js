@@ -109,14 +109,12 @@ const checkIfProjectExists = (event) => {
   fetch('/api/v1/projects')
   .then(projects => projects.json())
   .then(parsedProjects => {
-    console.log('parsedProjects: ', parsedProjects);
     const existingProject = parsedProjects.find(project => {
       return project.name === projectName;
     })
     return existingProject;
   })
   .then(foundProject => {
-    console.log('foundProject: ', foundProject);
     if(foundProject) {
       alertDuplicate(projectName);
       $('#project-name-input').val('');
