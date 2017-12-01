@@ -70,6 +70,17 @@ before((done) => {
         throw err;
       });
     });
+
+    it('should return a 404 for a route that does not exist', () => {
+     return chai.request(server)
+     .get('/api/v1/nope')
+     .then(response => {
+       response.should.have.status(404);
+     })
+     .catch(err => {
+       throw err;
+     });
+   });
   });
 
   describe('GET /api/v1/palettes', () => {
@@ -166,6 +177,18 @@ before((done) => {
         throw err;
       });
     });
+
+    it('should return a 404 for a project that does not exist', () => {
+     return chai.request(server)
+     .get('/api/v1/projects/700/palettes')
+     .then(response => {
+       response.should.have.status(404);
+     })
+     .catch(err => {
+       throw err;
+     });
+   });
+
   });
 
   describe('POST /api/v1/projects', () => {
@@ -196,54 +219,91 @@ before((done) => {
         throw err;
       });
    });
+
+ it('should not create a project with missing data', () => {
+       return chai.request(server)
+       .post('/api/v1/projects')
+       .send({
+         id: 4
+       })
+       .then(response => {
+         response.should.have.status(422);
+         response.body.error.should.equal('You are missing the name property.');
+       })
+       .catch(err => {
+         throw err;
+       });
+     });
+
  });
 
- describe('POST /api/v1/projects/:projectID/palettes', () => {
+   describe('POST /api/v1/projects/:projectID/palettes', () => {
 
-  it('should be able to add a new palette to the database', (done) => {
-    chai.request(server)
-    .post('/api/v1/projects/1/palettes')
-    .send({
-      id: 3,
-      name: 'Ocean',
-      color1: '#246802',
-      color2: '#346802',
-      color3: '#446802',
-      color4: '#546802',
-      color5: '#646802',
-    })
-    .then(response => {
-      response.should.have.status(201);
-      response.body.should.be.a('object');
-      response.body.should.have.property('name');
-      response.body.name.should.equal('Ocean');
-      response.body.should.have.property('id');
-      response.body.id.should.equal(3);
-      response.body.should.have.property('color1');
-      response.body.color1.should.equal('#246802');
-      response.body.should.have.property('color2');
-      response.body.color2.should.equal('#346802');
-      response.body.should.have.property('color3');
-      response.body.color3.should.equal('#446802');
-      response.body.should.have.property('color4');
-      response.body.color4.should.equal('#546802');
-      response.body.should.have.property('color5');
-      response.body.color5.should.equal('#646802');
+    it('should be able to add a new palette to the database', (done) => {
       chai.request(server)
-      .get('/api/v1/projects/1/palettes')
+      .post('/api/v1/projects/1/palettes')
+      .send({
+        id: 3,
+        name: 'Ocean',
+        color1: '#246802',
+        color2: '#346802',
+        color3: '#446802',
+        color4: '#546802',
+        color5: '#646802',
+      })
       .then(response => {
-        response.body.should.be.a('array');
-        response.body.length.should.equal(3);
-        done();
-      });
-    })
-    .catch(err => {
-       throw err;
-     });
-  });
-});
+        response.should.have.status(201);
+        response.body.should.be.a('object');
+        response.body.should.have.property('name');
+        response.body.name.should.equal('Ocean');
+        response.body.should.have.property('id');
+        response.body.id.should.equal(3);
+        response.body.should.have.property('color1');
+        response.body.color1.should.equal('#246802');
+        response.body.should.have.property('color2');
+        response.body.color2.should.equal('#346802');
+        response.body.should.have.property('color3');
+        response.body.color3.should.equal('#446802');
+        response.body.should.have.property('color4');
+        response.body.color4.should.equal('#546802');
+        response.body.should.have.property('color5');
+        response.body.color5.should.equal('#646802');
+        chai.request(server)
+        .get('/api/v1/projects/1/palettes')
+        .then(response => {
+          response.body.should.be.a('array');
+          response.body.length.should.equal(3);
+          done();
+        });
+      })
+      .catch(err => {
+         throw err;
+       });
+    });
 
-describe('DELETE /api/v1/palettes/:id', () => {
+  it('should not create a palette with missing data', () => {
+        return chai.request(server)
+        .post('/api/v1/projects/1/palettes')
+        .send({
+          id: 4,
+          name: 'cool palette',
+          color1: '#FFFFFF',
+          color2: '#FFFFFF',
+          color3: '#FFFFFF',
+          color4: '#FFFFFF'
+        })
+        .then(response => {
+          response.should.have.status(422);
+          response.body.error.should.equal('You are missing the color5 property');
+        })
+        .catch(err => {
+          throw err;
+        });
+      });
+
+  });
+
+  describe('DELETE /api/v1/palettes/:id', () => {
 
     it('should delete a palette from the database', (done) => {
       chai.request(server)
@@ -252,8 +312,18 @@ describe('DELETE /api/v1/palettes/:id', () => {
         response.should.have.status(204);
         done();
       });
-});
+    });
 
-});
+    it('should return 422 if item to delete does not exist', () => {
+      chai.request(server)
+      .delete('/api/v1/palettes/99')
+      .then(response => {
+        response.should.have.status(422);
+        response.body.error.should.equal('Cannot find palette with ID 99.');
+        done();
+      });
+    });
+
+  });
 
 });

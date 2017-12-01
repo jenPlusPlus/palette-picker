@@ -43,7 +43,6 @@ app.get('/api/v1/projects/:projectID', (request, response) => {
   })
 });
 
-// unnecessary?
 app.get('/api/v1/palettes/:paletteID', (request, response) => {
   const paletteID = request.params.paletteID;
 
