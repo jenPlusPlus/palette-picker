@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha"
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit",
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "",

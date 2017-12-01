@@ -26,6 +26,7 @@ app.get('/api/v1/projects', (request, response) => {
     });
 });
 
+// unnecessary?
 app.get('/api/v1/projects/:projectID', (request, response) => {
   database('projects').where('id', request.params.projectID).select()
   .then(projects => {
@@ -42,6 +43,7 @@ app.get('/api/v1/projects/:projectID', (request, response) => {
   })
 });
 
+// unnecessary?
 app.get('/api/v1/palettes/:paletteID', (request, response) => {
   const paletteID = request.params.paletteID;
 
@@ -154,3 +156,5 @@ app.delete('/api/v1/palettes/:paletteID', (request, response) => {
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 })
+
+module.exports = app;
