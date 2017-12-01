@@ -26,6 +26,12 @@ const assignColors = () => {
 const lockColor = (event) => {
   event.preventDefault();
   $(event.target).parents('.palette-color').toggleClass('locked');
+  $(event.target).toggleClass('lock-button-locked');
+  if($(event.target).attr('src') === './assets/unlocked_icon.svg') {
+    $(event.target).attr('src', './assets/locked_icon.svg');
+  } else {
+    $(event.target).attr('src', './assets/unlocked_icon.svg');
+  }
 }
 
 const toggleErrorClass = (projectID) => {
@@ -51,7 +57,7 @@ const addPaletteToPage = (palette, projectID) => {
         <div class='palette-colors saved-palette-${palette.id}' id='color-${palette.color4}' style='background-color: ${palette.color4}'></div>
         <div class='palette-colors saved-palette-${palette.id}' id='color-${palette.color5}' style='background-color: ${palette.color5}'></div>
       </div>
-      <button class='delete-palette-button' id='delete-palette-${palette.id}'>Delete</button>
+      <div class='delete-palette-button' id='delete-palette-${palette.id}'>X</div>
     </li>`;
 
     if(!$(`#no-palette-${projectID}`).hasClass('error-no-palettes')) {
@@ -93,7 +99,8 @@ const addProjectToPage = (project) => {
     </ul>
   </li>`;
   $('.projects-list').append(projectHTML);
-  $('#project-folders').append(new Option(`${project.name}`, project.id, false, true));
+  $('#project-folders').append(`<option class='project-options' value=${project.id} id='option-${project.id}' selected>${project.name}</option>`);
+  $(`#option-${project.id}`).siblings().removeAttr('selected');
 }
 
 const getAllProjects = () => {
@@ -102,6 +109,7 @@ const getAllProjects = () => {
   .then(parsedProjects => {
     parsedProjects.forEach(project => {
       addProjectToPage(project);
+      $('.project-options').removeAttr('selected');
       getAllPalettesForProject(project);
     })
   })
@@ -198,7 +206,7 @@ const savePalette = (event) => {
   .catch(error => console.log(error))
 
   $('#palette-name-input').val('');
-  $('#save-palette-button').attr("disabled", true);
+  $('#save-palette-button').attr('disabled', true);
 }
 
 const deletePaletteDB = (event) => {
@@ -226,7 +234,7 @@ const deletePalette = (event) => {
 }
 
 const enableSavePaletteButton = () => {
-  if($('#palette-name-input').val() != ''){
+  if($('#palette-name-input').val() != ''  && $('#project-folders option:selected').val() !=='Choose a Project'){
     $('#save-palette-button').attr("disabled", false);
   }
   else {
@@ -235,10 +243,10 @@ const enableSavePaletteButton = () => {
 }
 
 const enableSaveProjectButton = () => {
-  if($('#project-name-input').val() != ''){
-    $('#save-project-button').attr("disabled", false);
+  if($('#project-name-input').val() !== ''){
+    $('#save-project-button').attr('disabled', false);
   } else {
-    $('#save-project-button').attr("disabled", true);
+    $('#save-project-button').attr('disabled', true);
   }
 }
 
