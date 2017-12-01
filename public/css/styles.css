@@ -24,7 +24,12 @@ button {
   background-color: #119DA4;
 }
 
-button:hover {
+button:disabled {
+  background-color: #CDD2CD;
+  color:#119DA4;
+}
+
+button:hover:enabled {
   background-color: #A5FFD6;
   color: #119DA4;
 }
@@ -39,6 +44,7 @@ input {
   border-style: none;
   padding: 3px 2px;
   text-align: center;
+  color: #119DA4;
 }
 
 input::placeholder {
