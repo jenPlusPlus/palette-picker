@@ -4,55 +4,72 @@
     <meta charset="utf-8">
     <title>Palette Picker</title>
     <link rel="stylesheet" href='./css/styles.css'>
+    <link href="https://fonts.googleapis.com/css?family=Oxygen:400,700" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
+    <h1>Palette Picker</h1>
     <div class='palette-generator'>
-      <h1>Palette Picker</h1>
+      <div class='forms-container'>
+        <form class='new-project-form'>
+          <label for='project-name-input'>Create a new project:</label>
+          <input type='text' id='project-name-input' placeholder='New project name'></input>
+          <button type='submit' id='save-project-button' disabled=true>Save Project</button>
+        </form>
+        <form class='new-palette-form'>
+          <select id='project-folders'>
+            <option label>Choose a Project</option>
+          </select>
+          <input type='text' id='palette-name-input' placeholder='New palette name'></input>
+          <button type='submit' id='save-palette-button' disabled=true>Save Palette</button>
+        </form>
+      </div>
       <div class='palette-container'>
         <div class='palette-color' id='color-1'>
           <div class='palette-color-info'>
-            <button class='lock-button'>Lock</button>
-            <p id='color-hex-1'>#FFFFFF</p>
+            <div class='image-container'>
+              <img class='lock-button' src='./assets/unlocked_icon.svg'></img>
+            </div>
+            <p class='palette-color-info-text' id='color-hex-1'>#FFFFFF</p>
           </div>
         </div>
         <div class='palette-color' id='color-2'>
           <div class='palette-color-info'>
-            <button class='lock-button'>Lock</button>
-            <p id='color-hex-2'>#FFFFFF</p>
+            <div class='image-container'>
+              <img class='lock-button' src='./assets/unlocked_icon.svg'></img>
+            </div>
+            <p class='palette-color-info-text' id='color-hex-2'>#FFFFFF</p>
           </div>
         </div>
         <div class='palette-color' id='color-3'>
           <div class='palette-color-info'>
-            <button class='lock-button'>Lock</button>
-            <p id='color-hex-3'>#FFFFFF</p>
+            <div class='image-container'>
+              <img class='lock-button' src='./assets/unlocked_icon.svg'></img>
+            </div>
+            <p class='palette-color-info-text' id='color-hex-3'>#FFFFFF</p>
           </div>
         </div>
         <div class='palette-color' id='color-4'>
           <div class='palette-color-info'>
-            <button class='lock-button'>Lock</button>
-            <p id='color-hex-4'>#FFFFFF</p>
+            <div class='image-container'>
+              <img class='lock-button' src='./assets/unlocked_icon.svg'></img>
+            </div>
+            <p class='palette-color-info-text' id='color-hex-4'>#FFFFFF</p>
           </div>
         </div>
         <div class='palette-color' id='color-5'>
           <div class='palette-color-info'>
-            <button class='lock-button'>Lock</button>
-            <p id='color-hex-5'>#FFFFFF</p>
+            <div class='image-container'>
+              <img class='lock-button' src='./assets/unlocked_icon.svg'></img>
+            </div>
+            <p class='palette-color-info-text' id='color-hex-5'>#FFFFFF</p>
           </div>
         </div>
       </div>
       <button id='generate-palette-button'>Generate New Palette!</button>
-      <form class='new-palette-form'>
-        <select id='project-folders'></select>
-        <input type='text' id='palette-name-input' placeholder='Palette name'></input>
-        <button type='submit' id='save-palette-button' disabled=true>Save Palette</button>
-      </form>
     </div>
     <div class='projects-container'>
-      <form class='new-project-form'>
-        <label for='project-name-input'>Create a new project:</label>
-        <input type='text' id='project-name-input' placeholder='New project name'></input>
-        <button type='submit' id='save-project-button' disabled=true>Save Project</button>
-      </form>
+      <h2 id='projects-title'>Projects & Palettes</h2>
       <div class='projects-list-container'>
         <ul class='projects-list'></ul>
       </div>
