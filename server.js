@@ -17,11 +17,15 @@ app.locals.title = 'Palette Picker';
 app.use(express.static(__dirname + '/public'));
 
 function ensureSecure(request, response, next){
-  if (request.secure){
-    // OK, continue
+  if (request.headers["x-forwarded-proto"] === "https"){
+  // OK, continue
     return next();
-  }
+}
   response.redirect('https://'+request.hostname+request.url); // handle port numbers if you need non defaults
+}
+
+if (environment === 'production') {
+  app.all('*', ensureSecure);
 }
 
 app.get('/api/v1/projects', (request, response) => {
@@ -175,10 +179,6 @@ app.delete('/api/v1/palettes/:paletteID', (request, response) => {
       return response.status(500).json({ error });
     });
 });
-
-if (environment === 'production') {
-  app.all('*', ensureSecure);
-}
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
