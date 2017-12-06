@@ -25,7 +25,7 @@ function ensureSecure(request, response, next){
 }
 
 if (environment === 'production') {
-  app.all('*', ensureSecure);
+  app.use('*', ensureSecure);
 }
 
 app.get('/api/v1/projects', (request, response) => {
