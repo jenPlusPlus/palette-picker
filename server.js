@@ -16,17 +16,14 @@ app.locals.title = 'Palette Picker';
 
 app.use(express.static(__dirname + '/public'));
 
-function ensureSecure(request, response, next){
-  if (request.headers["x-forwarded-proto"] === "https"){
-  // OK, continue
-    return next();
-}
-  response.redirect('https://'+request.hostname+request.url); // handle port numbers if you need non defaults
-}
+const requireHTTPS = (request, response, next) => {
+  if (request.header('x-forwarded-proto') !== 'https') {
+    return response.redirect(`https://${request.header('host')}${request.url}`);
+  }
+  next();
+};
 
-if (environment === 'production') {
-  app.use('*', ensureSecure);
-}
+if (process.env.NODE_ENV === 'production') { app.use(requireHTTPS); }
 
 app.get('/api/v1/projects', (request, response) => {
   database('projects').select()
