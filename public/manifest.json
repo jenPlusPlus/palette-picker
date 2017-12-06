@@ -1,0 +1,30 @@
+{
+  "short_name": "Palette Picker",
+  "name": "Jen's Palette Picker",
+  "background_color": "#E54B4B",
+  "theme_color": "#A5FFD6",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "assets/kitten_48.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "assets/kitten_96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "assets/kitten_196.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "assets/kitten_512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "index.html?launcher=true"
+}
