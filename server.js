@@ -25,7 +25,7 @@ const requireHTTPS = (request, response, next) => {
 
 if (process.env.NODE_ENV === 'production') { app.use(requireHTTPS); }
 
-console.console.log('env: ', process.env.NODE_ENV);
+console.log('env: ', process.env.NODE_ENV);
 
 app.get('/api/v1/projects', (request, response) => {
   database('projects').select()
