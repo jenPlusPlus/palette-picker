@@ -7,31 +7,30 @@ exports.seed = function(knex, Promise) {
         knex('projects').insert({
           name: 'Project 1'
         }, 'id')
-        .then(project => {
-          return knex('palettes').insert([
-            {
-              name: 'Palette 1',
-              color1: '#FFFFFF',
-              color2: '#FFFFFF',
-              color3: '#FFFFFF',
-              color4: '#FFFFFF',
-              color5: '#FFFFFF',
-              project_id: project[0]
-            },
-            {
-              name: 'Palette 2',
-              color1: '#000000',
-              color2: '#000000',
-              color3: '#000000',
-              color4: '#000000',
-              color5: '#000000',
-              project_id: project[0]
-            }
-          ]) //end palettes insert
-        })
-        .then(() => console.log('seeding complete!'))
-        .catch(error => console.log({ error }))
-      ]); // end Promise.all
-    }) //end then
+          .then(project => {
+            return knex('palettes').insert([
+              {
+                name: 'Palette 1',
+                color1: '#FFFFFF',
+                color2: '#FFFFFF',
+                color3: '#FFFFFF',
+                color4: '#FFFFFF',
+                color5: '#FFFFFF',
+                project_id: project[0]
+              },
+              {
+                name: 'Palette 2',
+                color1: '#000000',
+                color2: '#000000',
+                color3: '#000000',
+                color4: '#000000',
+                color5: '#000000',
+                project_id: project[0]
+              }
+            ]);
+          })
+          .catch(error => console.log({ error }))
+      ]); 
+    })
     .catch(error => console.log({ error }));
 };

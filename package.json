@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "lint": "./node_modules/.bin/eslint ./"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "babel-eslint": "^8.0.2",
+    "babel-eslint": "^8.0.3",
     "body-parser": "^1.18.2",
     "chai": "^4.1.2",
     "eslint": "^4.12.0",
