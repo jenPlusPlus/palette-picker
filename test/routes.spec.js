@@ -9,6 +9,8 @@ const database = require('knex')(configuration);
 
 chai.use(chaiHttp);
 
+'use strict';
+
 describe('Client Routes', () => {
   it('should return the homepage', () => {
     return chai.request(server)
