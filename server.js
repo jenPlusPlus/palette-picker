@@ -101,8 +101,7 @@ app.get('/api/v1/projects/:projectID/palettes', (request, response) => {
 
 app.post('/api/v1/projects', (request, response) => {
   const project = request.body;
-  'use strict';
-  for (let requiredParameter of ['name']) {
+  for (var requiredParameter of ['name']) {
     if (!project[requiredParameter]) {
       return response.status(422).json({
         error: `You are missing the ${requiredParameter} property.`
@@ -122,11 +121,10 @@ app.post('/api/v1/projects', (request, response) => {
 });
 
 app.post('/api/v1/projects/:projectID/palettes', (request, response) => {
-  'use strict';
-  let palette = request.body;
+  var palette = request.body;
   const projectID = request.params.projectID;
 
-  for (let requiredParameter of ['name',
+  for (var requiredParameter of ['name',
     'color1',
     'color2',
     'color3',
