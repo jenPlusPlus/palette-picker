@@ -101,7 +101,7 @@ app.get('/api/v1/projects/:projectID/palettes', (request, response) => {
 
 app.post('/api/v1/projects', (request, response) => {
   const project = request.body;
-
+  'use strict';
   for (let requiredParameter of ['name']) {
     if (!project[requiredParameter]) {
       return response.status(422).json({
@@ -122,6 +122,7 @@ app.post('/api/v1/projects', (request, response) => {
 });
 
 app.post('/api/v1/projects/:projectID/palettes', (request, response) => {
+  'use strict';
   let palette = request.body;
   const projectID = request.params.projectID;
 
