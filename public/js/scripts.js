@@ -1,3 +1,5 @@
+const Dexie = require('dexie');
+
 const getRandomNumber = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -291,6 +293,23 @@ $('#generate-palette-button').on('click', assignColors);
 $('.lock-button').on('click', lockColor);
 $('#save-project-button').on('click', checkIfProjectExists);
 $('#save-palette-button').on('click', savePalette);
+
+
+
+let db = new Dexie('palette-picker');
+
+db.version(1).stores({
+  projects: 'id, name'
+});
+
+const saveOfflineProject = (project) => {
+  return db.projects.add(project);
+};
+
+const loadOfflineProjects = () => {
+  return db.projects.toArray();
+};
+
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
