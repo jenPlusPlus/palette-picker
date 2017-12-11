@@ -1,4 +1,67 @@
-const Dexie = require('dexie');
+//eslint-disable-next-line
+let db = new Dexie('palette-picker');
+
+db.version(1).stores({
+  projects: '++id, name',
+  palettes: '++id, name, color1, color2, color3, color4, color5, projectId'
+});
+
+const saveOfflineProject = (project) => {
+  return db.projects.add(project);
+};
+
+const saveOfflinePalette = (palette) => {
+  return db.palettes.add(palette);
+};
+
+const loadOfflineProjects = () => {
+  console.log('loading offline projects');
+  return db.projects.toArray();
+};
+
+const loadOfflinePalettes = () => {
+  console.log('loading offline palettes');
+  return db.palettes.toArray();
+};
+
+const saveProjectToIndexedDB = (project) => {
+  saveOfflineProject(project)
+    .then(() => console.log('IndexedDB Success'))
+    .catch(error => console.error('Error adding data to indexedDB', error));
+};
+
+const savePaletteToIndexedDB = (palette, project_id) => {
+  saveOfflinePalette({
+    name: palette.name,
+    color1: palette.color1,
+    color2: palette.color2,
+    color3: palette.color3,
+    color4: palette.color4,
+    color5: palette.color5,
+    project_Id: palette.project_Id
+  })
+    .then(() => console.log('IndexedDB Success'))
+    .catch(error => console.error('Error adding data to indexedDB', error));
+};
+
+const getOfflineProjects = () => {
+  loadOfflineProjects()
+    .then(projects => {
+      projects.forEach(project => addProjectToPage(project));
+      // getOfflinePalettes(project);
+    })
+    .catch(error => console.error(error));
+};
+
+const getOfflinePalettes = (id) => {
+  loadOfflinePalettes(id)
+    .then(palettes =>  {
+      const dbPalettes = palettes.filter(palette => palette.project_id === id);
+      dbPalettes.forEach(palette => addPaletteToPage(palette));
+    })
+    .catch(error => console.error(error));
+};
+
 
 const getRandomNumber = (min, max) => {
   min = Math.ceil(min);
@@ -140,7 +203,10 @@ const getAllProjects = () => {
         getAllPalettesForProject(project);
       });
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      // console.log(error);
+      getOfflineProjects();
+    });
 };
 
 const alertDuplicate = (projectName) => {
@@ -175,7 +241,10 @@ const checkIfProjectExists = (event) => {
         $('#project-name-input').val('');
       }
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      console.log(error);
+      saveProjectToIndexedDB({ name: projectName });
+    });
 
 };
 
@@ -197,9 +266,12 @@ const saveProject = (event) => {
       }
     })
     .then(addedProject => {
+      saveProjectToIndexedDB({ name: projectName });
       addProjectToPage(addedProject);
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      console.log(error);
+    });
 
   $('#save-project-button').attr("disabled", true);
 };
@@ -213,7 +285,12 @@ const savePalette = (event) => {
   const color4 = $('#color-hex-4').text();
   const color5 = $('#color-hex-5').text();
   const projectID = $('#project-folders option:selected').val();
-
+  savePaletteToIndexedDB({name: paletteName,
+  color1: color1,
+  color2: color2,
+  color3: color3,
+  color4: color4,
+  project_Id: projectID});
   fetch(`/api/v1/projects/${projectID}/palettes`, {
     method: 'POST',
     headers: {
@@ -293,23 +370,6 @@ $('#generate-palette-button').on('click', assignColors);
 $('.lock-button').on('click', lockColor);
 $('#save-project-button').on('click', checkIfProjectExists);
 $('#save-palette-button').on('click', savePalette);
-
-
-
-let db = new Dexie('palette-picker');
-
-db.version(1).stores({
-  projects: 'id, name'
-});
-
-const saveOfflineProject = (project) => {
-  return db.projects.add(project);
-};
-
-const loadOfflineProjects = () => {
-  return db.projects.toArray();
-};
-
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
