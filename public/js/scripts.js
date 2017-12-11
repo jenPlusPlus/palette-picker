@@ -299,7 +299,7 @@ if ('serviceWorker' in navigator) {
 
 
     // Register a new service worker
-    navigator.serviceWorker.register('./service-worker.js')
+    navigator.serviceWorker.register('../../service-worker.js')
       .then(registration => navigator.serviceWorker.ready)
       .then(registration => {
       //  Notification.requestPermission();
