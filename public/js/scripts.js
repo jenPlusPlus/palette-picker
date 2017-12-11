@@ -291,3 +291,22 @@ $('#generate-palette-button').on('click', assignColors);
 $('.lock-button').on('click', lockColor);
 $('#save-project-button').on('click', checkIfProjectExists);
 $('#save-palette-button').on('click', savePalette);
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+
+    // Load projects and palettes from indexedDB
+
+
+    // Register a new service worker
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(registration => navigator.serviceWorker.ready)
+      .then(registration => {
+      //  Notification.requestPermission();
+        console.log('ServiceWorker registration successful');
+      }).catch(error => {
+        console.log(`ServiceWorker registration failed: ${error}`);
+      });
+
+  });
+}
