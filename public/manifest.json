@@ -6,25 +6,15 @@
   "display": "fullscreen",
   "icons": [
     {
-      "src": "assets/kitten_48.png",
-      "type": "image/png",
-      "sizes": "48x48"
-    },
-    {
-      "src": "assets/kitten_96.png",
-      "type": "image/png",
-      "sizes": "96x96"
-    },
-    {
-      "src": "assets/kitten_196.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "assets/kitten_512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    }
-  ],
+    "src": "./assets/locked_icon.svg",
+    "type": "image/png",
+    "sizes": "48x48 96x96 192x192 512x512"
+  },
+  {
+  "src": "./assets/unlocked_icon.svg",
+  "type": "image/png",
+  "sizes": "48x48 96x96 192x192 512x512"
+}
+],
   "start_url": "index.html?launcher=true"
 }
