@@ -30,6 +30,13 @@ const saveProjectToIndexedDB = (project) => {
     .catch(error => console.error('Error adding data to indexedDB', error));
 };
 
+// savePaletteToIndexedDB({name: paletteName,
+// color1: color1,
+// color2: color2,
+// color3: color3,
+// color4: color4,
+// project_Id: projectID});
+
 const savePaletteToIndexedDB = (palette, project_id) => {
   saveOfflinePalette({
     name: palette.name,
@@ -205,7 +212,11 @@ const getAllProjects = () => {
     })
     .catch(error => {
       // console.log(error);
-      getOfflineProjects();
+      let offlineProjects = getOfflineProjects();
+      offlineProjects.forEach(project => {
+        addProjectToPage(project);
+        $('.project-options').removeAttr('selected');
+      });
     });
 };
 
@@ -243,7 +254,6 @@ const checkIfProjectExists = (event) => {
     })
     .catch(error => {
       console.log(error);
-      saveProjectToIndexedDB({ name: projectName });
     });
 
 };
@@ -266,7 +276,6 @@ const saveProject = (event) => {
       }
     })
     .then(addedProject => {
-      saveProjectToIndexedDB({ name: projectName });
       addProjectToPage(addedProject);
     })
     .catch(error => {
@@ -285,12 +294,7 @@ const savePalette = (event) => {
   const color4 = $('#color-hex-4').text();
   const color5 = $('#color-hex-5').text();
   const projectID = $('#project-folders option:selected').val();
-  savePaletteToIndexedDB({name: paletteName,
-  color1: color1,
-  color2: color2,
-  color3: color3,
-  color4: color4,
-  project_Id: projectID});
+
   fetch(`/api/v1/projects/${projectID}/palettes`, {
     method: 'POST',
     headers: {
@@ -309,8 +313,9 @@ const savePalette = (event) => {
       toggleErrorClass(projectID);
       addPaletteToPage(addedPalette, projectID);
     })
-    .catch(error => console.log(error));
-
+    .catch(error => {
+      console.log(error);
+    });
   $('#palette-name-input').val('');
   $('#save-palette-button').attr('disabled', true);
 };
