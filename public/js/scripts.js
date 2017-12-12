@@ -2,7 +2,7 @@
 let db = new Dexie('palette-picker');
 
 db.version(1).stores({
-  projects: '++id, name',
+  projects: '++id, &name',
   palettes: '++id, name, color1, color2, color3, color4, color5, projectId'
 });
 
@@ -15,12 +15,10 @@ const saveOfflinePalette = (palette) => {
 };
 
 const loadOfflineProjects = () => {
-  console.log('loading offline projects');
   return db.projects.toArray();
 };
 
 const loadOfflinePalettes = () => {
-  console.log('loading offline palettes');
   return db.palettes.toArray();
 };
 
@@ -29,13 +27,6 @@ const saveProjectToIndexedDB = (project) => {
     .then(() => console.log('IndexedDB Success'))
     .catch(error => console.error('Error adding data to indexedDB', error));
 };
-
-// savePaletteToIndexedDB({name: paletteName,
-// color1: color1,
-// color2: color2,
-// color3: color3,
-// color4: color4,
-// project_Id: projectID});
 
 const savePaletteToIndexedDB = (palette, project_id) => {
   saveOfflinePalette({
@@ -51,24 +42,31 @@ const savePaletteToIndexedDB = (palette, project_id) => {
     .catch(error => console.error('Error adding data to indexedDB', error));
 };
 
+const getAllOfflinePalettesForProject = (id) => {
+
+  loadOfflinePalettes(id)
+    .then(palettes =>  {
+
+      const dbPalettes = palettes.filter(palette => {
+        return parseInt(palette.project_Id) === id;
+      });
+      dbPalettes.forEach(palette => {
+        addPaletteToPage(palette, id);
+      });
+    })
+    .catch(error => console.error(error));
+};
+
 const getOfflineProjects = () => {
   loadOfflineProjects()
     .then(projects => {
-      projects.forEach(project => addProjectToPage(project));
-      // getOfflinePalettes(project);
+      projects.forEach(project => {
+        addProjectToPage(project);
+        getAllOfflinePalettesForProject(project.id);
+      });
     })
     .catch(error => console.error(error));
 };
-
-const getOfflinePalettes = (id) => {
-  loadOfflinePalettes(id)
-    .then(palettes =>  {
-      const dbPalettes = palettes.filter(palette => palette.project_id === id);
-      dbPalettes.forEach(palette => addPaletteToPage(palette));
-    })
-    .catch(error => console.error(error));
-};
-
 
 const getRandomNumber = (min, max) => {
   min = Math.ceil(min);
@@ -211,12 +209,8 @@ const getAllProjects = () => {
       });
     })
     .catch(error => {
-      // console.log(error);
-      let offlineProjects = getOfflineProjects();
-      offlineProjects.forEach(project => {
-        addProjectToPage(project);
-        $('.project-options').removeAttr('selected');
-      });
+      console.log(error);
+      getOfflineProjects();
     });
 };
 
@@ -254,6 +248,23 @@ const checkIfProjectExists = (event) => {
     })
     .catch(error => {
       console.log(error);
+      loadOfflineProjects()
+        .then(projects => {
+          const existingProject = projects.find(project => {
+            return project.name === projectName;
+          });
+          return existingProject;
+        })
+        .then(foundProject => {
+          if (foundProject) {
+            alertDuplicate(projectName);
+            $('#project-name-input').val('');
+          } else {
+            saveProject(event);
+            $('#project-name-input').val('');
+          }
+        })
+        .catch(error => console.error(error));
     });
 
 };
@@ -262,6 +273,8 @@ const saveProject = (event) => {
   event.preventDefault();
 
   const projectName = $('#project-name-input').val();
+
+  saveProjectToIndexedDB({ name: projectName });
 
   fetch('/api/v1/projects', {
     method: 'POST',
@@ -280,6 +293,11 @@ const saveProject = (event) => {
     })
     .catch(error => {
       console.log(error);
+      let id = '';
+      db.projects.toCollection().last().then(result => {
+        addProjectToPage({name: projectName, id: result.id});
+      });
+
     });
 
   $('#save-project-button').attr("disabled", true);
@@ -295,6 +313,14 @@ const savePalette = (event) => {
   const color5 = $('#color-hex-5').text();
   const projectID = $('#project-folders option:selected').val();
 
+  savePaletteToIndexedDB({name: paletteName,
+    color1: color1,
+    color2: color2,
+    color3: color3,
+    color4: color4,
+    color5: color5,
+    project_Id: projectID});
+
   fetch(`/api/v1/projects/${projectID}/palettes`, {
     method: 'POST',
     headers: {
@@ -308,13 +334,22 @@ const savePalette = (event) => {
       color4: color4,
       color5: color5 })
   })
-    .then(response => response.json())
+    .then(response => {
+
+      response.json();
+    })
     .then(addedPalette => {
       toggleErrorClass(projectID);
       addPaletteToPage(addedPalette, projectID);
     })
     .catch(error => {
-      console.log(error);
+      addPaletteToPage({
+        name: paletteName,
+        color1: color1,
+        color2: color2,
+        color3: color3,
+        color4: color4,
+        color5: color5}, projectID);
     });
   $('#palette-name-input').val('');
   $('#save-palette-button').attr('disabled', true);
